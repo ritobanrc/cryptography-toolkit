@@ -16,14 +16,18 @@ def rot13_decrypt(ciphertext):
 
 def transposition_decrypt(ciphertext, key):
     m = ceil(len(ciphertext)/key)
-    plaintext = [''] * m * key
+    # Dear Future Me, if you are reading this code, that means something must have gone horribly wrong.
+    # Please don't do this. What I'm doing here is a terrible hack.
+    plaintext = ''
+    ciphertext = list(ciphertext)
+    exclude_count = key * m - len(ciphertext)
+    for i in range(exclude_count):
+        ciphertext.insert(len(ciphertext) - m * i, '')
     for i in range(len(ciphertext)):
-        '''
-        Issue: the grey boxes
-        
-        '''
-        plaintext[(i % m) * key + floor(i/m)] = ciphertext[i]
-    return ''.join(plaintext)
+        # 0, 4, 8, 12, ... 28, 1,
+        plaintext += ciphertext[(i % key) * m + floor(i/key)]
+    return plaintext
+
 
 
 if __name__ == '__main__':
